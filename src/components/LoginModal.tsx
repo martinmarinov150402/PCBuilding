@@ -16,7 +16,7 @@ export function LoginModal({visible, onCloseClick}:{visible:boolean, onCloseClic
     },
   })
     return (
-        <div className = {"w-1/3 h-96 fixed bg-zinc-700 items-center border-2 border-solid border-indigo-600 flex flex-col " + (visible ? "visible" : "invisible")}>
+        <div className = {"w-full lg:w-1/3 h-96 fixed bg-zinc-700 absolute lg:left-1/3 top-1/3 items-center border-2 border-solid border-indigo-600 flex flex-col " + (visible ? "visible" : "invisible")}>
             <div className = "flex flex-line">
                 <h1 className="text-white font text-3xl mt-5">Sign in to the site</h1>
                 <div onClick={() => onCloseClick()} className="text-white ml-10 mt-5 items-end purple accent-5 w-5 h-5 text-center">X</div>
