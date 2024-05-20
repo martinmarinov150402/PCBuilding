@@ -1,11 +1,15 @@
-function NavBar({onLoginClick}: {onLoginClick: ()=>void})
+import { useNavigate } from "react-router";
+
+function NavBar({onLoginClick, }: {onLoginClick: ()=>void})
 {
+
+    const nav = useNavigate();
     return (
       <nav>
         <div className="nav-wrapper purple accent-5">
           <ul id="nav-mobile" className="left hide-on-med-and-down">
-            <li><a href="#">Конфигурации</a></li>
-            <li onClick={() => onLoginClick()}><a href="#">Влез</a></li>
+            <li onClick={() => nav("/configurations/")}>Конфигурации</li>
+            <li onClick={() => onLoginClick()}><a href="#login">Влез</a></li>
           </ul>
         </div> 
       </nav> 

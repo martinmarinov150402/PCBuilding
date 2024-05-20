@@ -1,8 +1,10 @@
+import { useParams } from 'react-router';
 import './MainPage.css';
 import NavBar from './components/NavBar';
 import { PartCard } from './components/PartCard';
 
-export function ConfigurationPage({configurationId} : {configurationId: number}) {
+export function ConfigurationPage() {
+
     
     return (
         <div className='bg-zinc-700 w-full h-full absolute flex flex-row'>

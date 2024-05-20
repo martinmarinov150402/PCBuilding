@@ -1,7 +1,4 @@
 import { Controller, useForm } from "react-hook-form"
-import { Input } from "@material-tailwind/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faWindowClose} from '@fortawesome/fontawesome-free-solid'
 
 export function LoginModal({visible, onCloseClick}:{visible:boolean, onCloseClick: () => void} ) {
 

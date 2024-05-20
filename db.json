@@ -3,5 +3,12 @@
       {"id": 1, "username": "admin", "password": "admin", "firstName": "Admin", "lastName": "Admin"},
       {"id": 2, "username": "expert", "password": "expert", "firstName": "Expert", "lastName": "Expert"},
       {"id": 3, "username": "user", "password": "user", "firstName": "User", "lastName": "User"}  
+    ],
+    "parts": [
+      {"id": 1, "type": "CPU", "model": "Intel Core i7" ,"speed": 3.1, "cores": 4},
+      {"id": 2, "type": "HDD", "model": "Segate Baracuda", "size": 2000}
+    ],
+    "configurations": [
+      {"id": 1, "name": "Gaming", "author": 2, "description": "A really good configuration that can handle needs of all gamers and people who want to use it as an office configuration." ,"parts": [1, 2]}
     ]
 }

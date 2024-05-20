@@ -1,16 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import MainPage from './layout';
 import reportWebVitals from './reportWebVitals';
-import { ConfigurationPage } from './ConfigurationPage';
+import  Layout from './layout';
+import App from './App';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
-    <MainPage/>
+    <App/>
+    
   </React.StrictMode>
 );
 reportWebVitals();
