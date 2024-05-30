@@ -1,0 +1,17 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "makeUsers": "knex migrate:make users",
+    "migrate:latest": "knex migrate:latest"
+  },
+  "author": "Martin Marinov",
+  "license": "Apache-2.0",
+  "description": "",
+  "dependencies": {
+    "knex": "^3.1.0",
+    "objection": "^3.1.4"
+  }
+}
