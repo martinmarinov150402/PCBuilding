@@ -5,9 +5,11 @@ import { StatusCodes } from 'http-status-codes';
 
 export function validateData(schema: z.ZodObject<any, any>) {
   return (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.body);
     try {
       schema.parse(req.body);
       next();
+      console.log("HUI");
     } catch (error) {
       if (error instanceof ZodError) {
       const errorMessages = error.errors.map((issue: any) => ({

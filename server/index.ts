@@ -1,10 +1,13 @@
 import { UserModel } from "./models/UserModel";
 import 'dotenv/config';
 import bodyParser from 'body-parser';
+import { validateData } from "./middleware/validationMiddleware";
+import { userRegistrationSchema } from "./schemas/userSchemas";
 
 const express = require('express')
 const app = express()
 const port = 3000
+const { createHash } = require('crypto');
 
 const { Model } = require('objection');
 
@@ -13,7 +16,7 @@ const knex = require('knex')({
   connection: {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
-    user: process.env.DB_USER,
+    user: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DBNAME,
   },
@@ -31,8 +34,14 @@ app.get('/api/users', async (req, res) => {
   console.log("giving users");
 })
 
-app.post('/api/users', async (req, res) => {
-    const result = await UserModel.query().insert()
+app.post('/api/users', validateData(userRegistrationSchema), async (req, res) => {
+    const newUser = new UserModel();
+    newUser.username = req.body.username;
+    newUser.passHash = createHash("sha256").update(req.body.password).digest("hex")
+    newUser.firstName = req.body.firstName;
+    newUser.lastName = req.body.lastName;
+    await UserModel.query().insert(newUser);
+    res.send("KUR");
 })
 
 app.listen(port, () => {
