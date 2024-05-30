@@ -1,5 +1,6 @@
 import { UserModel } from "./models/UserModel";
-import 'dotenv/config'
+import 'dotenv/config';
+import bodyParser from 'body-parser';
 
 const express = require('express')
 const app = express()
@@ -21,11 +22,17 @@ const knex = require('knex')({
 
 Model.knex(knex);
 
+app.use(bodyParser.json());
+
 
 app.get('/api/users', async (req, res) => {
   const result = await UserModel.query().select();
   await res.send(result);
   console.log("giving users");
+})
+
+app.post('/api/users', async (req, res) => {
+    const result = await UserModel.query().insert()
 })
 
 app.listen(port, () => {
