@@ -1,4 +1,5 @@
 // Update with your config settings.
+import 'dotenv/config'
 
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
@@ -8,9 +9,9 @@ module.exports = {
   development: {
     client: 'postgresql',
     connection: {
-      database: 'pcbuilding',
-      user:     'bntplay',
-      password: 'bntplay'
+      database: process.env.DB_DBNAME,
+      user:     process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD
     },
     pool: {
       min: 2,
@@ -24,9 +25,9 @@ module.exports = {
   staging: {
     client: 'postgresql',
     connection: {
-      database: 'pcbuilding',
-      user:     'bntplay',
-      password: 'bntplay'
+      database: process.env.DB_DBNAME,
+      user:     process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD
     },
     pool: {
       min: 2,
@@ -42,9 +43,9 @@ module.exports = {
     connection: {
       host: 'localhost',
       port: 5432,
-      database: 'pcbuilding',
-      user:     'bntplay',
-      password: 'bntplay',
+      database: process.env.DB_DBNAME,
+      user:     process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD
     },
     pool: {
       min: 2,
