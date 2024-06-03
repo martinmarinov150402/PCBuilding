@@ -41,8 +41,16 @@ app.post('/api/users', validateData(userRegistrationSchema), async (req, res) =>
     newUser.firstName = req.body.firstName;
     newUser.lastName = req.body.lastName;
     await UserModel.query().insert(newUser);
-    res.send("KUR");
+    res.send(newUser);
 })
+
+app.patch('/api/users/:user', async (req, res) => {
+  console.log("HUI");
+  await UserModel.query().findById(req.params.user).patch(req.body);
+  res.send(await UserModel.query().findById(req.params.user));
+});
+
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`)

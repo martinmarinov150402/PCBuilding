@@ -47,7 +47,12 @@ app.post('/api/users', (0, validationMiddleware_1.validateData)(userSchemas_1.us
     newUser.firstName = req.body.firstName;
     newUser.lastName = req.body.lastName;
     yield UserModel_1.UserModel.query().insert(newUser);
-    res.send("KUR");
+    res.send(newUser);
+}));
+app.patch('/api/users/:user', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("HUI");
+    yield UserModel_1.UserModel.query().findById(req.params.user).patch(req.body);
+    res.send(yield UserModel_1.UserModel.query().findById(req.params.user));
 }));
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
