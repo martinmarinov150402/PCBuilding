@@ -3,11 +3,32 @@ import 'dotenv/config';
 import bodyParser from 'body-parser';
 import { validateData } from "./middleware/validationMiddleware";
 import { userRegistrationSchema } from "./schemas/userSchemas";
+import passport from "passport";
+import { ExtractJwt, Strategy } from "passport-jwt";
+
+
+const opts = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: process.env.JWT_SECRET as string,
+};
+
+passport.use(
+  new Strategy(opts, async (payload, done) => {
+    try {
+      console.log(payload);
+      //const user = await UserModel.query().findById(payload.user.id);
+      if (payload.user) return done(null, payload.user);
+    } catch (error) {
+      return done(error);
+    }
+  })
+);
 
 const express = require('express')
 const app = express()
 const port = 3000
 const { createHash } = require('crypto');
+const jwt = require('jsonwebtoken');
 
 const { Model } = require('objection');
 
@@ -44,11 +65,29 @@ app.post('/api/users', validateData(userRegistrationSchema), async (req, res) =>
     res.send(newUser);
 })
 
-app.patch('/api/users/:user', async (req, res) => {
-  console.log("HUI");
-  await UserModel.query().findById(req.params.user).patch(req.body);
+app.patch('/api/users/:user', passport.authenticate("jwt", {session: false}), async (req, res) => {
+
+  
+  console.log(req.user);
+  await UserModel.query().findById(req.user).patch(req.body);
   res.send(await UserModel.query().findById(req.params.user));
 });
+app.post('/api/login', async (req, res) => {
+  const user = await UserModel.query().findOne("username", req.body.username)
+  const passHash = createHash("sha256").update(req.body.password).digest("hex");
+  console.log(passHash)
+  console.log(user?.passHash);
+  if(passHash === user?.passHash) {
+    const token = jwt.sign({user: user}, process.env.JWT_SECRET, { expiresIn: "1d" });
+    res.status(200).send({message: "Logged in", accessToken: token});
+  }
+  else {
+    res.status(401).send({message: "Unauthorized"});
+  }
+})
+app.get('/api/profile', passport.authenticate("jwt", {session: false}), async (req, res) => {
+  res.status(200).send({profile: req.user});
+})
 
 
 
