@@ -24,6 +24,7 @@ passport.use(
   })
 );
 
+
 const express = require('express')
 const app = express()
 const port = 3000
@@ -46,7 +47,10 @@ const knex = require('knex')({
 
 Model.knex(knex);
 
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+const cors = require('cors');
+app.use(cors());
 
 
 app.get('/api/users', async (req, res) => {
@@ -73,6 +77,7 @@ app.patch('/api/users/:user', passport.authenticate("jwt", {session: false}), as
   res.send(await UserModel.query().findById(req.params.user));
 });
 app.post('/api/login', async (req, res) => {
+  console.log(req.body);
   const user = await UserModel.query().findOne("username", req.body.username)
   const passHash = createHash("sha256").update(req.body.password).digest("hex");
   console.log(passHash)

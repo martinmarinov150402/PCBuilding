@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const UserModel_1 = require("./models/UserModel");
 require("dotenv/config");
-const body_parser_1 = __importDefault(require("body-parser"));
 const validationMiddleware_1 = require("./middleware/validationMiddleware");
 const userSchemas_1 = require("./schemas/userSchemas");
 const passport_1 = __importDefault(require("passport"));
@@ -52,7 +51,11 @@ const knex = require('knex')({
     searchPath: ['knex', 'public'],
 });
 Model.knex(knex);
-app.use(body_parser_1.default.json());
+//app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+const cors = require('cors');
+app.use(cors());
 app.get('/api/users', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield UserModel_1.UserModel.query().select();
     yield res.send(result);
@@ -73,6 +76,7 @@ app.patch('/api/users/:user', passport_1.default.authenticate("jwt", { session: 
     res.send(yield UserModel_1.UserModel.query().findById(req.params.user));
 }));
 app.post('/api/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.body);
     const user = yield UserModel_1.UserModel.query().findOne("username", req.body.username);
     const passHash = createHash("sha256").update(req.body.password).digest("hex");
     console.log(passHash);

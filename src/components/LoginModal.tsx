@@ -1,5 +1,6 @@
 import { Controller, useForm } from "react-hook-form"
 import {Button, TextField} from "@mui/material"
+import { json } from "stream/consumers"
 
 export function LoginModal({visible, onCloseClick}:{visible:boolean, onCloseClick: () => void} ) {
 
@@ -54,7 +55,25 @@ export function LoginModal({visible, onCloseClick}:{visible:boolean, onCloseClic
                 name="password"
             />
 
-            <Button variant = "contained" className="w-1/3 purple accent-5 mt-5 h-12 text-white" onClick={handleSubmit(data => console.log(data))}>Login</Button> 
+            <Button
+  variant="contained"
+  className="w-1/3 purple accent-5 mt-5 h-12 text-white"
+  onClick={handleSubmit(async (data) => {
+    console.log(JSON.stringify(data));
+    const response = await fetch("http://localhost:3000/api/login", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username: data.username, password: data.password })
+    });
+    if (response.status === 200 && response.body) {
+      localStorage.setItem("Token", (await response.json()).accessToken);
+    }
+  })}
+>
+  Login
+</Button> 
                     
         </div>
         
