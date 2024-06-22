@@ -69,6 +69,15 @@ app.post('/api/users', validateData(userRegistrationSchema), async (req, res) =>
     res.send(newUser);
 })
 
+app.get('/api/profile', passport.authenticate("jwt", {session: false}), async (req, res) => {
+  if(req.user) {
+    res.status(200).send(req.user)
+  }
+  else {
+    res.status(401).send("Unauthorized");
+  }
+})
+
 app.patch('/api/users/:user', passport.authenticate("jwt", {session: false}), async (req, res) => {
 
   

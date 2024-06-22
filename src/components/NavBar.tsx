@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 
-function NavBar({onLoginClick, }: {onLoginClick: ()=>void})
+function NavBar({onLoginClick, isLoggedIn}: {onLoginClick: () => void, isLoggedIn : boolean})
 {
 
     const nav = useNavigate();
@@ -9,7 +9,7 @@ function NavBar({onLoginClick, }: {onLoginClick: ()=>void})
         <div className="nav-wrapper purple accent-5">
           <ul id="nav-mobile" className="left hide-on-med-and-down">
             <li onClick={() => nav("/configurations/")}>Конфигурации</li>
-            <li onClick={() => onLoginClick()}><a href="#login">Влез</a></li>
+            {!isLoggedIn && (<li onClick={() => onLoginClick()}><a href="#login">Влез</a></li>)}
           </ul>
         </div> 
       </nav> 

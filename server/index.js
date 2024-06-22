@@ -51,7 +51,6 @@ const knex = require('knex')({
     searchPath: ['knex', 'public'],
 });
 Model.knex(knex);
-//app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 const cors = require('cors');
@@ -69,6 +68,14 @@ app.post('/api/users', (0, validationMiddleware_1.validateData)(userSchemas_1.us
     newUser.lastName = req.body.lastName;
     yield UserModel_1.UserModel.query().insert(newUser);
     res.send(newUser);
+}));
+app.get('/api/profile', passport_1.default.authenticate("jwt", { session: false }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (req.user) {
+        res.status(200).send(req.user);
+    }
+    else {
+        res.status(401).send("Unauthorized");
+    }
 }));
 app.patch('/api/users/:user', passport_1.default.authenticate("jwt", { session: false }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.user);
