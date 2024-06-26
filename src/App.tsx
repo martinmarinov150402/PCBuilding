@@ -4,6 +4,7 @@ import { MainPage } from "./MainPage"
 import { getConfigurations, loadConfiguration } from "./services/httpService"
 import Layout from "./layout"
 import { ConfigurationsPage } from "./ConfigurationsPage"
+import RegistrationPage from "./RegistrationPage"
 
 function App() {
     const router = createBrowserRouter([
@@ -21,6 +22,10 @@ function App() {
                 loader: loadConfiguration,
                 element: <ConfigurationPage/>
             },
+            {
+                path: "/register",
+                element: <RegistrationPage/>
+            }
         ],
     }
   ])
