@@ -18,6 +18,8 @@ const validationMiddleware_1 = require("./middleware/validationMiddleware");
 const userSchemas_1 = require("./schemas/userSchemas");
 const passport_1 = __importDefault(require("passport"));
 const passport_jwt_1 = require("passport-jwt");
+const ConfigurationModel_1 = require("./models/ConfigurationModel");
+const PartModel_1 = require("./models/PartModel");
 const opts = {
     jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: process.env.JWT_SECRET,
@@ -101,4 +103,18 @@ app.get('/api/profile', passport_1.default.authenticate("jwt", { session: false 
 }));
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
+});
+//Configurations
+app.get("/api/configuration", function (req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const configurations = yield ConfigurationModel_1.ConfigurationModel.query().select("*");
+        res.status(200).send(configurations);
+    });
+});
+//Parts
+app.get("/api/parts", function (req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const parts = yield PartModel_1.PartModel.query().select("*");
+        res.status(200).send(parts);
+    });
 });

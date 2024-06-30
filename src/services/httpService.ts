@@ -9,9 +9,9 @@ export async function getInfoAbout(field: string) : Promise<Object[]>
 }
 
 export async function getConfigurations() {
-    return await getInfoAbout("configurations") as Configuration[];
+    return await getInfoAbout("api/configuration") as Configuration[];
 }
 
 export async function loadConfiguration({request, params}: LoaderFunctionArgs) {
-    return await getInfoAbout(`configurations/${params.configurationId}`)
+    return await getInfoAbout(`api/configuration/${params.configurationId}`)
 }

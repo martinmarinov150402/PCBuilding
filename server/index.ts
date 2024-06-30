@@ -5,6 +5,8 @@ import { validateData } from "./middleware/validationMiddleware";
 import { userRegistrationSchema } from "./schemas/userSchemas";
 import passport from "passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
+import { ConfigurationModel } from "./models/ConfigurationModel";
+import { PartModel } from "./models/PartModel";
 
 
 const opts = {
@@ -108,3 +110,23 @@ app.get('/api/profile', passport.authenticate("jwt", {session: false}), async (r
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`)
 })
+
+//Configurations
+
+app.get("/api/configuration", async function(req, res) {
+    const configurations = await ConfigurationModel.query().select("*");
+    res.status(200).send(configurations)
+})
+
+
+//Parts
+
+app.get("/api/parts", async function (req, res) {
+  const parts = await PartModel.query().select("*");
+  res.status(200).send(parts);
+})
+
+app.get("/api/configuration/:configuration", async function (req, res) {
+  const configuration = await PartModel.query().select().where("id", req.params.configuraiton)
+})
+

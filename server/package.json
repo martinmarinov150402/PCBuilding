@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "makeUsers": "knex migrate:make users",
+    "makeUsers": "knex migrate:make configurations",
     "migrate:latest": "knex migrate:latest"
   },
   "author": "Martin Marinov",
