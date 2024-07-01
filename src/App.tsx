@@ -5,6 +5,7 @@ import { getConfigurations, loadConfiguration } from "./services/httpService"
 import Layout from "./layout"
 import { ConfigurationsPage } from "./ConfigurationsPage"
 import RegistrationPage from "./RegistrationPage"
+import CreateConfigurationPage from "./CreateConfigurationPage"
 
 function App() {
     const router = createBrowserRouter([
@@ -21,6 +22,10 @@ function App() {
                 path: "/configurations/:configurationId/*",
                 loader: loadConfiguration,
                 element: <ConfigurationPage/>
+            },
+            {
+                path: "/configurations/create",
+                element: <CreateConfigurationPage></CreateConfigurationPage>
             },
             {
                 path: "/register",

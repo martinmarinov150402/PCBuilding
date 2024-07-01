@@ -11,6 +11,7 @@ export enum PartType {
     Case = "Case",
 }
 export type Part = {
+    id: number
     partType: PartType
     partBrand: string
     partModel: string
