@@ -7,6 +7,9 @@ import passport from "passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { ConfigurationModel } from "./models/ConfigurationModel";
 import { PartModel } from "./models/PartModel";
+import { config } from "process";
+import { ConfigurationPartModel } from "./models/ConfigurationPartModel";
+import { UserRole } from "./UserRoleEnum";
 
 
 const opts = {
@@ -52,7 +55,7 @@ Model.knex(knex);
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 const cors = require('cors');
-app.use(cors());
+app.use(cors({origin: '*'}));
 
 
 app.get('/api/users', async (req, res) => {
@@ -61,12 +64,23 @@ app.get('/api/users', async (req, res) => {
   console.log("giving users");
 })
 
+app.get('/api/users/:user', async (req, res) => {
+  const result = (await UserModel.query().select().where("id", req.params.user))[0];
+  const response = {
+    ...result,
+    passHash: "Nothing to see here :)"
+  };
+  res.status(200).send(response);
+
+})
+
 app.post('/api/users', validateData(userRegistrationSchema), async (req, res) => {
     const newUser = new UserModel();
     newUser.username = req.body.username;
     newUser.passHash = createHash("sha256").update(req.body.password).digest("hex")
     newUser.firstName = req.body.firstName;
     newUser.lastName = req.body.lastName;
+    newUser.role = UserRole.User;
     await UserModel.query().insert(newUser);
     res.send(newUser);
 })
@@ -127,6 +141,36 @@ app.get("/api/parts", async function (req, res) {
 })
 
 app.get("/api/configuration/:configuration", async function (req, res) {
-  const configuration = await PartModel.query().select().where("id", req.params.configuraiton)
+  console.log(req.params);
+  const configuration = await ConfigurationModel.query().withGraphJoined("parts").where("configurations.id", req.params.configuration)
+  res.status(200).send(configuration[0]);
+})
+
+app.post("/api/part", passport.authenticate("jwt", {session: false}), async function (req, res) {
+  const part = new PartModel();
+  part.partBrand = req.body.partBrand;
+  part.partModel = req.body.partModel;
+  part.partDescription = req.body.partDescription;
+  part.partIndex = req.body.partIndex;
+  part.partType = req.body.partType;
+  await PartModel.query().insert(part);
+  res.status(201).send(part);
+})
+
+app.post("/api/configuration", passport.authenticate("jwt", {session: false}), async function (req, res) {
+  const configuration = new ConfigurationModel();
+  configuration.authorId = req.user.id;
+  configuration.description = req.body.description;
+  configuration.title = req.body.title;
+  
+  await ConfigurationModel.query().insert(configuration);
+  const conf = await ConfigurationModel.query().findOne(configuration);
+  const parts = req.body.parts.split(", ");
+  const models = parts.map(element => {
+    return {partId: parseInt(element), configurationId: conf?.id};
+  });
+  console.log(models);
+  await ConfigurationPartModel.query().insert(models);
+  res.status(201).send(configuration);
 })
 

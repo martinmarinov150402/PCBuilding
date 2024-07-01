@@ -13,5 +13,6 @@ export async function getConfigurations() {
 }
 
 export async function loadConfiguration({request, params}: LoaderFunctionArgs) {
+    console.log("Ivan", params);
     return await getInfoAbout(`api/configuration/${params.configurationId}`)
 }

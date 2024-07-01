@@ -20,6 +20,7 @@ const passport_1 = __importDefault(require("passport"));
 const passport_jwt_1 = require("passport-jwt");
 const ConfigurationModel_1 = require("./models/ConfigurationModel");
 const PartModel_1 = require("./models/PartModel");
+const ConfigurationPartModel_1 = require("./models/ConfigurationPartModel");
 const opts = {
     jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: process.env.JWT_SECRET,
@@ -56,11 +57,16 @@ Model.knex(knex);
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 const cors = require('cors');
-app.use(cors());
+app.use(cors({ origin: '*' }));
 app.get('/api/users', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield UserModel_1.UserModel.query().select();
     yield res.send(result);
     console.log("giving users");
+}));
+app.get('/api/users/:user', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = (yield UserModel_1.UserModel.query().select().where("id", req.params.user))[0];
+    const response = Object.assign(Object.assign({}, result), { passHash: "Nothing to see here :)" });
+    res.status(200).send(response);
 }));
 app.post('/api/users', (0, validationMiddleware_1.validateData)(userSchemas_1.userRegistrationSchema), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const newUser = new UserModel_1.UserModel();
@@ -116,5 +122,41 @@ app.get("/api/parts", function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const parts = yield PartModel_1.PartModel.query().select("*");
         res.status(200).send(parts);
+    });
+});
+app.get("/api/configuration/:configuration", function (req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log(req.params);
+        const configuration = yield ConfigurationModel_1.ConfigurationModel.query().withGraphJoined("parts").where("configurations.id", req.params.configuration);
+        res.status(200).send(configuration[0]);
+    });
+});
+app.post("/api/part", passport_1.default.authenticate("jwt", { session: false }), function (req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const part = new PartModel_1.PartModel();
+        part.partBrand = req.body.partBrand;
+        part.partModel = req.body.partModel;
+        part.partDescription = req.body.partDescription;
+        part.partIndex = req.body.partIndex;
+        part.partType = req.body.partType;
+        yield PartModel_1.PartModel.query().insert(part);
+        res.status(201).send(part);
+    });
+});
+app.post("/api/configuration", passport_1.default.authenticate("jwt", { session: false }), function (req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const configuration = new ConfigurationModel_1.ConfigurationModel();
+        configuration.authorId = req.user.id;
+        configuration.description = req.body.description;
+        configuration.title = req.body.title;
+        yield ConfigurationModel_1.ConfigurationModel.query().insert(configuration);
+        const conf = yield ConfigurationModel_1.ConfigurationModel.query().findOne(configuration);
+        const parts = req.body.parts.split(", ");
+        const models = parts.map(element => {
+            return { partId: parseInt(element), configurationId: conf === null || conf === void 0 ? void 0 : conf.id };
+        });
+        console.log(models);
+        yield ConfigurationPartModel_1.ConfigurationPartModel.query().insert(models);
+        res.status(201).send(configuration);
     });
 });

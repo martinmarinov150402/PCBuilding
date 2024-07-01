@@ -1,7 +1,26 @@
 import  { useNavigate} from 'react-router-dom'
+
+export enum PartType {
+    CPU = "CPU",
+    RAM = "Memory",
+    HDD = "Hard Drive",
+    SSD = "SSD",
+    VideoCard = "Video Card",
+    PSU = "PSU",
+    Motherboard = "Motherboard",
+    Case = "Case",
+}
+export type Part = {
+    partType: PartType
+    partBrand: string
+    partModel: string
+    partIndex: number
+    partDescription: string
+}
 export type Configuration = {
+    authorId: number,
     name: string,
-    parts: number[],
+    parts: Part[],
 }
 export function ConfigurationDesc({configuration} : {configuration: any}) {
 
