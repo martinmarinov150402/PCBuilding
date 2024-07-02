@@ -21,6 +21,7 @@ const passport_jwt_1 = require("passport-jwt");
 const ConfigurationModel_1 = require("./models/ConfigurationModel");
 const PartModel_1 = require("./models/PartModel");
 const ConfigurationPartModel_1 = require("./models/ConfigurationPartModel");
+const UserRoleEnum_1 = require("./UserRoleEnum");
 const opts = {
     jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: process.env.JWT_SECRET,
@@ -74,6 +75,7 @@ app.post('/api/users', (0, validationMiddleware_1.validateData)(userSchemas_1.us
     newUser.passHash = createHash("sha256").update(req.body.password).digest("hex");
     newUser.firstName = req.body.firstName;
     newUser.lastName = req.body.lastName;
+    newUser.role = UserRoleEnum_1.UserRole.User;
     yield UserModel_1.UserModel.query().insert(newUser);
     res.send(newUser);
 }));
