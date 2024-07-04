@@ -2,6 +2,7 @@ import { Controller, useForm } from "react-hook-form"
 import {Button, TextField} from "@mui/material"
 import { json } from "stream/consumers"
 
+
 export function LoginModal({visible, onCloseClick}:{visible:boolean, onCloseClick: () => void} ) {
 
     const {
@@ -69,6 +70,7 @@ export function LoginModal({visible, onCloseClick}:{visible:boolean, onCloseClic
     });
     if (response.status === 200 && response.body) {
       localStorage.setItem("Token", (await response.json()).accessToken);
+      window.location.reload();
     }
   })}
 >

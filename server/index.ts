@@ -1,13 +1,11 @@
 import { UserModel } from "./models/UserModel";
 import 'dotenv/config';
-import bodyParser from 'body-parser';
 import { validateData } from "./middleware/validationMiddleware";
 import { userRegistrationSchema } from "./schemas/userSchemas";
 import passport from "passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { ConfigurationModel } from "./models/ConfigurationModel";
 import { PartModel } from "./models/PartModel";
-import { config } from "process";
 import { ConfigurationPartModel } from "./models/ConfigurationPartModel";
 import { UserRole } from "./UserRoleEnum";
 
@@ -147,14 +145,21 @@ app.get("/api/configuration/:configuration", async function (req, res) {
 })
 
 app.post("/api/part", passport.authenticate("jwt", {session: false}), async function (req, res) {
-  const part = new PartModel();
-  part.partBrand = req.body.partBrand;
-  part.partModel = req.body.partModel;
-  part.partDescription = req.body.partDescription;
-  part.partIndex = req.body.partIndex;
-  part.partType = req.body.partType;
-  await PartModel.query().insert(part);
-  res.status(201).send(part);
+  if(req.user.role === UserRole.User)
+  {
+    res.status(401).send("Unauthorized");
+  }
+  else
+  {
+    const part = new PartModel();
+    part.partBrand = req.body.partBrand;
+    part.partModel = req.body.partModel;
+    part.partDescription = req.body.partDescription;
+    part.partIndex = req.body.partIndex;
+    part.partType = req.body.partType;
+    await PartModel.query().insert(part);
+    res.status(201).send(part);
+  }
 })
 
 app.post("/api/configuration", passport.authenticate("jwt", {session: false}), async function (req, res) {

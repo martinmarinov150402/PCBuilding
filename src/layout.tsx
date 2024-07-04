@@ -22,6 +22,9 @@ function Layout() {
     if(result.status <= 400) {
       setIsLoggedIn(true);
     }
+    else {
+      setIsLoggedIn(false);
+    }
   }, []) 
   
   return (

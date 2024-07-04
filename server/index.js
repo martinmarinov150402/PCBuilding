@@ -135,14 +135,19 @@ app.get("/api/configuration/:configuration", function (req, res) {
 });
 app.post("/api/part", passport_1.default.authenticate("jwt", { session: false }), function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const part = new PartModel_1.PartModel();
-        part.partBrand = req.body.partBrand;
-        part.partModel = req.body.partModel;
-        part.partDescription = req.body.partDescription;
-        part.partIndex = req.body.partIndex;
-        part.partType = req.body.partType;
-        yield PartModel_1.PartModel.query().insert(part);
-        res.status(201).send(part);
+        if (req.user.role === UserRoleEnum_1.UserRole.User) {
+            res.status(401).send("Unauthorized");
+        }
+        else {
+            const part = new PartModel_1.PartModel();
+            part.partBrand = req.body.partBrand;
+            part.partModel = req.body.partModel;
+            part.partDescription = req.body.partDescription;
+            part.partIndex = req.body.partIndex;
+            part.partType = req.body.partType;
+            yield PartModel_1.PartModel.query().insert(part);
+            res.status(201).send(part);
+        }
     });
 });
 app.post("/api/configuration", passport_1.default.authenticate("jwt", { session: false }), function (req, res) {

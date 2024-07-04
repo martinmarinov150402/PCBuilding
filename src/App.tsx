@@ -6,6 +6,8 @@ import Layout from "./layout"
 import { ConfigurationsPage } from "./ConfigurationsPage"
 import RegistrationPage from "./RegistrationPage"
 import CreateConfigurationPage from "./CreateConfigurationPage"
+import PartsPage from "./PartsPage"
+import CreatePartPage from "./CreatePartPage"
 
 function App() {
     const router = createBrowserRouter([
@@ -28,8 +30,16 @@ function App() {
                 element: <CreateConfigurationPage></CreateConfigurationPage>
             },
             {
+                path: "/parts",
+                element: <PartsPage/>
+            },
+            {
                 path: "/register",
                 element: <RegistrationPage/>
+            },
+            {
+                path: "/parts/create",
+                element: <CreatePartPage/>
             }
         ],
     }
